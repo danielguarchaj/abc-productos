@@ -1,0 +1,44 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+{% include 'parts/menu.html' %}
+<div>
+  &nbsp;
+</div>
+
+<div class="container" id="listing">
+  <h1>Productos por categoria</h1>
+  <canvas id="grafica"></canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>
+<script>
+  const $grafica = document.querySelector("#grafica");
+  let categoriesData = "{{categories}}".replaceAll("&quot;", '"')
+  categoriesData = JSON.parse(categoriesData)
+  const etiquetas = categoriesData.map(c => c.name)
+  new Chart($grafica, {
+    type: 'bar',
+    data: {
+      labels: etiquetas,
+      datasets: [
+        {
+          label: "Categorias",
+          data: categoriesData.map(c => c.products_count),
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1,
+        }
+      ]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }],
+      },
+    }
+  });
+</script>
+
+{% endblock %}
